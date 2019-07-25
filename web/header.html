@@ -1,0 +1,69 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <title>HFish - 企业员工安全防护培训网络钓鱼框架</title>
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/libs/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/libs/switchery/switchery.min.css" rel="stylesheet"/>
+    <link href="/static/libs/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+</head>
+
+<body>
+<!-- Navigation Bar-->
+<header id="topnav">
+    <div class="topbar-main">
+        <div class="container">
+            <!-- LOGO -->
+            <div class="topbar-left">
+                <a href="/dashboard" class="logo">
+                    {{/*<img src="/static/images/logo.png" class="logoimg">*/}}
+                    <span>HFish</span>
+                </a>
+            </div>
+
+            <div id="navigation" style="margin-left: 120px;">
+                <ul class="navigation-menu">
+                    <li>
+                        <a href="/dashboard"><i class="zmdi zmdi-view-dashboard icotop3"></i> <span> 仪表盘 </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/fish"><i class="fa fa-user-secret "></i> <span> 钓鱼列表 </span> </a>
+                    </li>
+                    <li>
+                        <a href="/mail"><i class="zmdi zmdi-email icotop3"></i> <span> 邮箱群发 </span> </a>
+                    </li>
+                    <li>
+                        <a href="/setting"><i class="fa fa-cog icotop3"></i> <span> 系统设置 </span> </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="menu-extras">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="nav-item dropdown notification-list">
+                        <a class="nav-link waves-effect waves-light right-bar-toggle" href="javascript:void(0);">
+                            <i class="zmdi zmdi-format-subject noti-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div> <!-- end menu-extras -->
+            <div class="clearfix"></div>
+        </div> <!-- end container -->
+    </div>
+    <!-- end topbar-main -->
+    <div class="navbar-custom">
+        <div class="container">
+
+        </div>
+    </div>
+</header>
+<!-- End Navigation Bar-->
+<div class="wrapper">
+    <div class="container">
+        <!-- Page-Title -->
+{{end}}

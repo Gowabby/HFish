@@ -1,0 +1,261 @@
+{{template "header"}}
+<style>
+    .card-box {
+        padding: 0px;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0rem;
+    }
+
+    #tableList .td{
+        vertical-align: middle;
+    }
+
+    thead {
+        background: #f5f5f5;
+    }
+
+    .start_end {
+        margin-right: 5px;
+    }
+
+    .del {
+        color: #f70000;
+    }
+
+    .cjs {
+        color: #525d6d;
+    }
+
+    .hover {
+        cursor: pointer;
+    }
+</style>
+<div class="row">
+    <!-- Page-Title -->
+    <div class="col-sm-12">
+        <div class="btn-group pull-right m-t-15">
+            <a type="button" class="btn btn-custom" href="#">导出 <span class="m-l-5"><i
+                    class="zmdi zmdi-alarm-plus"></i></span>
+            </a>
+        </div>
+        <h4 class="page-title">钓鱼列表</h4>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th width="10%">项目</th>
+                    <th width="10%">类型</th>
+                    <th width="10%">IP</th>
+                    <th width="10%">系统</th>
+                    <th width="10%">浏览器</th>
+                    <th width="10%">信息</th>
+                    <th width="10%">时间</th>
+                    <th width="6%">操作</th>
+                </tr>
+                </thead>
+                <tbody id="tableList">
+                <tr>
+                    <td class="td">微博钓鱼</td>
+                    <td class="td">WEB</td>
+                    <td class="td">10.60.0.191</td>
+                    <td class="td">Windows</td>
+                    <td class="td">Chrome</td>
+                    <td>{
+                        "user":"admin",
+                        "passwd":"admin"
+                        }</td>
+                    <td class="td">2018-01-01 10:00</td>
+                    <td class="td">操作</td>
+                </tr>
+                <tr>
+                    <td class="td">微博钓鱼</td>
+                    <td class="td">WEB</td>
+                    <td class="td">10.60.0.191</td>
+                    <td class="td">Windows</td>
+                    <td class="td">Chrome</td>
+                    <td>{
+                        "user":"admin",
+                        "passwd":"admin"
+                        }</td>
+                    <td class="td">2018-01-01 10:00</td>
+                    <td class="td">操作</td>
+                </tr>
+                <tr>
+                    <td class="td">微博钓鱼</td>
+                    <td class="td">WEB</td>
+                    <td class="td">10.60.0.191</td>
+                    <td class="td">Windows</td>
+                    <td class="td">Chrome</td>
+                    <td>{
+                        "user":"admin",
+                        "passwd":"admin"
+                        }</td>
+                    <td class="td">2018-01-01 10:00</td>
+                    <td class="td">操作</td>
+                </tr>
+                <tr>
+                    <td class="td">微博钓鱼</td>
+                    <td class="td">WEB</td>
+                    <td class="td">10.60.0.191</td>
+                    <td class="td">Windows</td>
+                    <td class="td">Chrome</td>
+                    <td>{
+                        "user":"admin",
+                        "passwd":"admin"
+                        }</td>
+                    <td class="td">2018-01-01 10:00</td>
+                    <td class="td">操作</td>
+                </tr>
+                <tr>
+                    <td class="td">微博钓鱼</td>
+                    <td class="td">WEB</td>
+                    <td class="td">10.60.0.191</td>
+                    <td class="td">Windows</td>
+                    <td class="td">Chrome</td>
+                    <td>{
+                        "user":"admin",
+                        "passwd":"admin"
+                        }</td>
+                    <td class="td">2018-01-01 10:00</td>
+                    <td class="td">操作</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{template "footer" }}
+<script>
+    function init() {
+        $.ajax({
+            type: "GET",
+            url: "/get/task/list",
+            dataType: "json",
+            success: function (e) {
+                if (e.code == 200) {
+                    var data = e.data;
+                    var _h = '';
+
+                    for (var i = 0; i < data.length; i++) {
+                        _h += '<tr>';
+                        _h += '    <th><span class="label label-primary">' + data[i].task_name + '</span></th>';
+                        _h += '    <td class="cjs">' + data[i].task_explain + '</td>';
+
+                        if (data[i].task_time_type == "1") {
+                            _h += '    <td><span class="label label-info">' + data[i].task_time + '秒</span></td>';
+                        } else if (data[i].task_time_type == "2") {
+                            _h += '    <td><span class="label label-info">' + data[i].task_time + '分</span></td>';
+                        } else if (data[i].task_time_type == "3") {
+                            _h += '    <td><span class="label label-info">' + data[i].task_time + '时</span></td>';
+                        } else if (data[i].task_time_type == "4") {
+                            _h += '    <td><span class="label label-info">每天-' + data[i].task_time + '</span></td>';
+                        } else if (data[i].task_time_type == "5") {
+                            _h += '    <td><span class="label label-info">每月-' + data[i].task_time + '</span></td>';
+                        }
+
+                        if (data[i].last_exec_time != "") {
+                            _h += '    <td>' + data[i].last_exec_time + '</td>';
+                        } else {
+                            _h += '    <td>暂未执行</td>';
+                        }
+
+
+                        if (data[i].task_id != "") {
+                            _h += '    <td><span class="label label-success">运行</span></td>';
+                            _h += '    <td>';
+                            _h += '        <i class="fa fa-stop start_end hover" onclick="stopTask(' + data[i].id + ')"></i>';
+                        } else {
+                            _h += '    <td><span class="label label-danger">停止</span></td>';
+                            _h += '    <td>';
+                            _h += '        <i class="fa fa-play start_end hover" onclick="startTask(' + data[i].id + ')"></i>';
+                        }
+
+                        _h += '        <i class="fa fa-trash-o del hover" onclick="delTask(' + data[i].id + ')"></i>';
+                        _h += '    </td>';
+                        _h += '</tr>';
+                    }
+
+                    $("#tableList").html(_h);
+                } else {
+
+                }
+            },
+            error: function (e) {
+            }
+        });
+    }
+
+    function delTask(id) {
+        $.ajax({
+            type: "POST",
+            url: "/post/task/del",
+            dataType: "json",
+            data: {
+                "id": id
+            },
+            success: function (e) {
+                if (e.code == 200) {
+                    window.location.href = "/task";
+                } else {
+                    swal("删除失败", e.msg, 'error');
+                }
+            },
+            error: function (e) {
+                swal("删除失败", "请 Github 提交 Issues", 'error');
+            }
+        });
+    }
+
+    function startTask(id) {
+        $.ajax({
+            type: "POST",
+            url: "/task/start",
+            dataType: "json",
+            data: {
+                "id": id
+            },
+            success: function (e) {
+                if (e.code == 200) {
+                    window.location.href = "/task";
+                } else {
+                    swal("启动失败", e.msg, 'error');
+                }
+            },
+            error: function (e) {
+                swal("启动失败", "请 Github 提交 Issues", 'error');
+            }
+        });
+    }
+
+
+    function stopTask(id) {
+        $.ajax({
+            type: "POST",
+            url: "/task/stop",
+            dataType: "json",
+            data: {
+                "id": id
+            },
+            success: function (e) {
+                if (e.code == 200) {
+                    window.location.href = "/task";
+                } else {
+                    swal("停止失败", e.msg, 'error');
+                }
+            },
+            error: function (e) {
+                swal("停止失败", "请 Github 提交 Issues", 'error');
+            }
+        });
+    }
+
+
+    init();
+</script>
