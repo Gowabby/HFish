@@ -17,7 +17,7 @@ func RunWeb(addr string) {
 	// 引入gin
 	r := gin.Default()
 	// 引入html资源
-	r.LoadHTMLGlob("web/*")
+	r.LoadHTMLGlob("web/admin/*")
 
 	// 引入静态资源
 	r.Static("/static", "./static")
