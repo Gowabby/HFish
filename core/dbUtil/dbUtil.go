@@ -8,7 +8,7 @@ import (
 
 // 连接数据库
 func conn() *sql.DB {
-	db, err := sql.Open("sqlite3", "./db/coot.db")
+	db, err := sql.Open("sqlite3", "./db/hfish.db")
 	error.Check(err, "连接数据库失败")
 	return db
 }

@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	setting.RunWeb("localhost:9000")
+	setting.Run("weibo", "/", "all")
+
 	args := os.Args
 	if args == nil || len(args) < 2 {
 		setting.Help()
@@ -20,9 +21,9 @@ func main() {
 			fmt.Println("0.1")
 		} else if args[1] == "run" || args[1] == "--run" {
 			if len(args) >= 3 {
-				setting.RunWeb(args[2])
+				setting.Run("weibo", "/", "all")
 			} else {
-				setting.RunWeb("localhost:9000")
+				setting.Run("weibo", "/", "all")
 			}
 		} else {
 			setting.Help()
