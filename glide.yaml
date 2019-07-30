@@ -3,4 +3,5 @@ import:
 - package: github.com/gin-gonic/gin
 - package: github.com/mattn/go-sqlite3
 - package: github.com/satori/go.uuid
+- package: github.com/gliderlabs/ssh
 - package: gopkg.in/gomail.v2
