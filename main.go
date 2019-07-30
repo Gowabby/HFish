@@ -1,14 +1,12 @@
 package main
 
 import (
-	//"HFish/utils/setting"
-	//"fmt"
-	//"os"
-	"HFish/core/protocol/ssh"
+	"HFish/core/protocol/redis"
 )
 
 func main() {
-	ssh.Start()
+	redis.Start()
+	//ssh.Start()
 	//setting.Run("weibo", "/", "all")
 	//
 	//args := os.Args
@@ -18,7 +16,7 @@ func main() {
 	//	if args[1] == "help" || args[1] == "--help" {
 	//		setting.Help()
 	//	} else if args[1] == "init" || args[1] == "--init" {
-	//		setting.Init()/**/
+	//		setting.Init() /**/
 	//	} else if args[1] == "version" || args[1] == "--version" {
 	//		fmt.Println("0.1")
 	//	} else if args[1] == "run" || args[1] == "--run" {
