@@ -1,11 +1,12 @@
 package main
 
 import (
-	"HFish/core/protocol/redis"
+	"HFish/core/protocol/mysql"
 )
 
 func main() {
-	redis.Start()
+	mysql.Start()
+	//redis.Start()
 	//ssh.Start()
 	//setting.Run("weibo", "/", "all")
 	//
