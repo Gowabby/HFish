@@ -1,11 +1,11 @@
 package view
 
 import (
+	"HFish/view/api"
 	"HFish/view/dashboard"
+	"HFish/view/fish"
 	"HFish/view/mail"
 	"HFish/view/setting"
-	"HFish/view/fish"
-	"HFish/view/api"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +19,13 @@ func LoadUrl(r *gin.Engine) {
 	r.GET("/mail", mail.Html)
 	// 设置
 	r.GET("/setting", setting.Html)
+	r.GET("/get/setting/info", setting.GetSettingInfo)
+	r.POST("/post/setting/update",setting.UpdateEmailInfo)
+	r.POST("/post/setting/login", setting.UpdateLoginInfo)
+	r.POST("/post/setting/alertOver", setting.UpdateAlertOverInfo)
+	r.POST("/post/setting/pushBullet", setting.UpdatePushBulletInfo)
+	r.POST("/post/setting/pushFangTang", setting.UpdatePushFangTangInfo)
+	r.POST("/post/setting/checkSetting",setting.UpdateStatusSetting)
 	// API 接口
 	r.GET("/api", api.Html)
 
