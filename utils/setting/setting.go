@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func RunHtml(project string, url string) http.Handler {
+func RunWeb(project string, url string) http.Handler {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
@@ -29,7 +29,7 @@ func RunHtml(project string, url string) http.Handler {
 	return r
 }
 
-func RunWeb() http.Handler {
+func RunAdmin() http.Handler {
 	gin.DisableConsoleColor()
 	f, _ := os.Create("./logs/hfish.log")
 	gin.DefaultWriter = io.MultiWriter(f)
@@ -52,14 +52,14 @@ func RunWeb() http.Handler {
 func Run(project string, url string, types string) {
 	server01 := &http.Server{
 		Addr:         ":9001",
-		Handler:      RunWeb(),
+		Handler:      RunAdmin(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	server02 := &http.Server{
 		Addr:         ":9000",
-		Handler:      RunHtml(project, url),
+		Handler:      RunWeb(project, url),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
@@ -110,16 +110,3 @@ func Help() {
 	fmt.Println(color.Yellow(" + -------------------------------------------------------------------- +"))
 	fmt.Println("")
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
