@@ -81,34 +81,45 @@ func Init() {
 
 func Help() {
 	exec.Execute("clear")
-	logo := `
-o
- \_/\o
-( Oo)                    \|/
-(_=-)  .===O- ~~~Z~A~P~~ -O-
-/   \_/U'                /|\
-||  |_/    __ _______     __
-\\  |     / // / __(_)__ / /
-{K ||    / _  / _// (_-</ _ \
- | PP   /_//_/_/ /_/___/_//_/
- | ||
- (__\\
+	logo := ` o
+  \_/\o
+ ( Oo)                    \|/
+ (_=-)  .===O- ~~~Z~A~P~~ -O-
+ /   \_/U'                /|\
+ ||  |_/
+ \\  |	     ~ By: HackLC Team
+ {K ||       __ _______     __
+  | PP      / // / __(_)__ / /
+  | ||     / _  / _// (_-</ _ \
+  (__\\   /_//_/_/ /_/___/_//_/ v0.1
 `
-	fmt.Print(color.Yellow(logo))
-	fmt.Println(color.White("   v0.1\n"))
-	fmt.Println(color.White(" Play IFTTT, Experience Geek Life, Internet Automation."))
+	fmt.Println(color.Yellow(logo))
+	fmt.Println(color.White(" An Active Attack Honeypot System for Fishing."))
 	fmt.Println("")
-	fmt.Println(color.Yellow(" + [ ABOUT ]--------------------------------------------------- +"))
+	fmt.Println(color.Yellow(" + [ ABOUT ]----------------------------------------------------------- +"))
 	fmt.Println("")
-	fmt.Println(color.Green("   + Home : "), color.White("https://coot.io"), color.Green("    + Team : "), color.White("https://yehu.io"))
+	fmt.Println(color.Green("   - Github:"), color.White("https://github.com/hacklcs/HFish"), color.Green(" - Team:"), color.White("https://hack.lc"))
 	fmt.Println("")
-	fmt.Println(color.Yellow(" + [ ARGUMENTS ]----------------------------------------------- +"))
+	fmt.Println(color.Yellow(" + [ ARGUMENTS ]------------------------------------------------------- +"))
 	fmt.Println("")
-	fmt.Println(color.Cyan("   run,--run"), color.White("	       Start up service, Default localhost:9000"))
+	fmt.Println(color.Cyan("   run,--run"), color.White("	       Start up service"))
 	//fmt.Println(color.Cyan("   init,--init"), color.White("		   Initialization, Wipe data"))
-	fmt.Println(color.Cyan("   version,--version"), color.White("  Coot Version"))
+	fmt.Println(color.Cyan("   version,--version"), color.White("  HFish Version"))
 	fmt.Println(color.Cyan("   help,--help"), color.White("	       Help"))
 	fmt.Println("")
-	fmt.Println(color.Yellow(" + ------------------------------------------------------------ +"))
+	fmt.Println(color.Yellow(" + -------------------------------------------------------------------- +"))
 	fmt.Println("")
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
