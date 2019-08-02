@@ -1,103 +1,98 @@
 {{template "header"}}
 <style>
-    .plug_name {
+    .card-box {
+        padding: 0px;
+    }
+
+    .pdbox {
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-right: 25px;
+        padding-bottom: 30px;
+    }
+
+    thead {
+        background: #f2f2f3;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .title {
+        border-left: 2px solid #0097ff;
+        padding-left: 10px;
+    }
+
+    .img {
+        position: absolute;
+        right: 167px;
+        text-align: center;
         font-weight: bold;
-        text-align: center;
-        font-size: 18px;
+        font-size: 20px;
+        top: 50px;
+        font-family: serif;
     }
 
-    .plig_js {
-        color: #6a6a71;
-        font-size: 12px;
-        text-align: center;
+    .xyimg {
+        width: 120px;
     }
 
-    .size12 {
-        font-size: 12px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .lang {
-        background: #009aff;
-        color: #f5f5f5;
-        position: absolute;
-        top: 0px;
-        left: 11px;
-        border-top-left-radius: 6px;
-        padding: 1px 10px;
-    }
-
-    .version {
-        position: absolute;
-        right: 10px;
-        background: #009aff;
-        top: 0;
-        border-top-right-radius: 6px;
-        font-size: 12px;
-        padding: 1px 10px;
-        color: #f5f5f5;
-    }
-
-    .fa {
-        margin-right: 10px;
-    }
 </style>
 <div class="row">
     <!-- Page-Title -->
     <div class="col-sm-12">
         <div class="btn-group pull-right m-t-15">
-            <a type="button" class="btn btn-custom" href="https://github.com/yehuio/Coot-Plugs" target="_blank">创建插件
-                <span class="m-l-5"><i
-                        class="zmdi zmdi-plus-circle-o"></i></span>
+            <a type="button" class="btn btn-custom" href="https://github.com/yehuio/Coot/blob/master/README.md"
+               target="_blank">查看帮助 <span class="m-l-5"><i
+                    class="zmdi zmdi-help-outline"></i></span>
             </a>
         </div>
-        <h4 class="page-title">插件中心</h4>
+        <h4 class="page-title">邮件群发</h4>
     </div>
 
-    <div id="plug_list">
+    <div class="col-sm-12">
+        <div class="card-box pdbox">
+            <div class="img">
+                <img src="/static/admin/images/xy.png" class="xyimg">
+                <p>人不努力，和咸鱼有什么区别？</p>
+            </div>
+            <div class="col-md-6">
+                <h4 class="header-title m-t-0 m-b-30 title">基本信息</h4>
+                <div class="form-group row">
+                    <label for="taskName" class="col-sm-3 form-control-label"><span class="text-danger">*</span>
+                        邮件标题：</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="taskName" placeholder="请输入邮件标题">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="taskExplain" class="col-sm-3 form-control-label"><span class="text-danger">*</span>
+                        发件人：</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="taskExplain" placeholder="请输入发件人">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="taskExplain" class="col-sm-3 form-control-label"><span class="text-danger">*</span>
+                        收件人：</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="taskExplain" placeholder="请输入收件人">
+                    </div>
+                </div>
+                <hr>
+                <h4 class="header-title m-t-0 m-b-30 title">邮件模板</h4>
+
+            </div>
+            <textarea style="width: 100%;margin-top: 20px;height: 200px;"></textarea>
+            <button type="button" class="btn btn-primary waves-effect waves-light"
+                    style="width: 100%;margin-top: 20px;" onclick="submit()">发送邮件
+            </button>
+            <div class="clear"></div>
+        </div>
     </div>
-
-
 </div>
 {{template "footer" }}
 <script>
-    function init() {
-        $.ajax({
-            type: "GET",
-            url: "https://raw.githubusercontent.com/yehuio/Coot-Plugs/master/plugs.json",
-            dataType: "json",
-            success: function (data) {
-                var _h = '';
 
-                for (var i = 0; i < data.length; i++) {
-                    _h += '<div class="col-sm-3">';
-                    _h += '    <div class="card-box">';
-                    _h += '        <span class="lang">' + data[i].script_language + '</span>';
-                    _h += '        <span class="version">' + data[i].version + '</span>';
-                    _h += '        <p class="plug_name">' + data[i].name + '</p>';
-                    _h += '        <p class="plig_js">' + data[i].explain + '</p>';
-                    _h += '        <hr>';
-                    _h += '        <p class="size12"><i class="fa fa-user"></i>' + data[i].author + '</p>';
-                    _h += '        <p class="size12"><i class="fa fa-github"></i><a href="' + data[i].github + '" target="_blank">' + data[i].github + '</a></p>';
-                    _h += '        <button type="button" class="btn btn-primary waves-effect waves-light" style="width: 100%;" onclick="openTaskAdd(&quot;' + data[i].name + '&quot;,&quot;' + data[i].explain + '&quot;,&quot;' + data[i].script_language + '&quot;,&quot;' + data[i].script_url + '&quot;)">使用此插件';
-                    _h += '        </button>';
-                    _h += '    </div>';
-                    _h += '</div>';
-                }
-
-                $("#plug_list").html(_h);
-            },
-            error: function (e) {
-                swal("访问 Github 失败", "可能是网络问题", 'error');
-            }
-        });
-    }
-
-    function openTaskAdd(taskName, taskExplain, taskLanguage, taskUrl) {
-        window.location.href = "/fish/add?name=" + taskName + "&explain=" + taskExplain + "&language=" + taskLanguage + "&url=" + taskUrl;
-    }
-
-    init();
 </script>

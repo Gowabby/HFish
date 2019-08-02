@@ -4926,7 +4926,7 @@ File: Menu
   min-height: 60px;
   box-shadow: 0 0px 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02); }
   #topnav .topbar-main {
-    background-color: #2c384e; }
+    background-color: #20242b; }
     #topnav .topbar-main .badge {
       position: absolute;
       top: 12px;
@@ -23044,12 +23044,12 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-ar
   }
   .wrapper-page .card-box {
     box-shadow: 0 0px 24px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
-    border: 5px solid #64b0f2; }
+    border: 5px solid #26292b; }
   .wrapper-page .logo {
     float: none !important;
     line-height: 36px;
     font-size: 24px;
-    color: #4397f1 !important; }
+    color: #2b2e31 !important; }
 
 .user-thumb {
   position: relative;

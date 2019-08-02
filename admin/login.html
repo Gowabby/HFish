@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/static/favicon.ico">
     <title>Coot - 玩转 IFTTT 体验极客生活，互联网一键自动化神器</title>
-    <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/libs/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css"/>
-    <link href="/static/libs/switchery/switchery.min.css" rel="stylesheet"/>
+    <link href="/static/admin/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/admin/libs/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/admin/libs/switchery/switchery.min.css" rel="stylesheet"/>
 </head>
 
 
 <body>
-<div class="account-pages" style="background-color: whitesmoke"></div>
+<div class="account-pages" style="background-color: #333642"></div>
 <div class="clearfix"></div>
 <div class="wrapper-page">
 
@@ -20,8 +20,8 @@
         <div class="card-box m-b-0">
             <div class="text-xs-center m-t-20">
                 <a href="/" class="logo">
-                    <img src="/static/images/logo.png" class="logoimg">
-                    <span>Coot</span>
+                    <img src="/static/admin/images/logo.png" class="logoimg">
+                    <span>HFish</span>
                 </a>
             </div>
             <div class="m-t-10 p-20">
@@ -48,16 +48,17 @@
         </div>
     </div>
     <div style="text-align: center;color: #ececec;">
-        Copyright 2019 © <a href="https://coot.io" target="_blank" style="color: #fff">Coot</a> - <a
-            href="https://yehu.io"
-            target="_blank" style="color: #fff">野虎团队</a>
+        Copyright 2019 © <a href="https://github.com/hacklcs/HFish" target="_blank" style="color: #fff">HFish</a> - <a
+            href="https://hack.lc"
+            target="_blank" style="color: #fff">HackLC</a>
     </div>
 </div>
 </body>
 <!-- App js -->
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/jquery.core.js"></script>
-<script src="/static/js/jquery.app.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="/static/admin/js/jquery.core.js"></script>
+<script src="/static/admin/js/jquery.app.js"></script>
+<script src="/static/admin/libs/bootstrap-sweetalert/sweet-alert.min.js"></script>
 <script>
     function loginFunc() {
         var loginName = $("#loginName").val();
@@ -72,8 +73,8 @@
                 "loginPwd": loginPwd
             },
             success: function (e) {
-                if (e.code == 200) {
-                    window.location.href = "/task";
+                if (e.code == "200") {
+                    window.location.href = "/dashboard";
                 } else {
                     swal("登录失败", e.msg, 'error');
                 }

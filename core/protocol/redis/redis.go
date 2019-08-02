@@ -2,15 +2,20 @@ package redis
 
 import (
 	"net"
-	"fmt"
 	"bufio"
 	"strings"
 	"strconv"
+	"HFish/utils/try"
+	"HFish/core/report"
 )
 
-func Start() {
+var kvData map[string]string
+
+func Start(addr string) {
+	kvData = make(map[string]string)
+
 	//建立socket，监听端口
-	netListen, _ := net.Listen("tcp", ":1215")
+	netListen, _ := net.Listen("tcp", addr)
 
 	defer netListen.Close()
 
@@ -19,27 +24,60 @@ func Start() {
 		if err != nil {
 			continue
 		}
-		go handleConnection(conn)
+		arr := strings.Split(conn.RemoteAddr().String(), ":")
+		id := report.ReportRedis(arr[0], conn.RemoteAddr().String()+" 已经连接")
+
+		go handleConnection(conn, id)
 	}
 }
 
 //处理 Redis 连接
-func handleConnection(conn net.Conn) {
+func handleConnection(conn net.Conn, id int64) {
 	for {
 		str := parseRESP(conn)
-		fmt.Println(str)
+
 		switch value := str.(type) {
 		case string:
+			report.ReportUpdateRedis(id, "&&"+str.(string))
+
 			if len(value) == 0 {
 				goto end
 			}
 			conn.Write([]byte(value))
 		case []string:
 			if value[0] == "SET" || value[0] == "set" {
+				// 模拟 redis set
+
+				try.Try(func() {
+					key := string(value[1])
+					val := string(value[2])
+					kvData[key] = val
+
+					report.ReportUpdateRedis(id, "&&"+value[0]+" "+value[1]+" "+value[2])
+
+				}).Catch(func() {
+					// 取不到 key 会异常
+				})
+
 				conn.Write([]byte("+OK\r\n"))
 			} else if value[0] == "GET" || value[0] == "get" {
-				conn.Write([]byte("+HeHe\r\n"))
+				// 模拟 redis get
+				key := string(value[1])
+				val := string(kvData[key])
+
+				valLen := strconv.Itoa(len(val))
+				str := "$" + valLen + "\r\n" + val + "\r\n"
+
+				report.ReportUpdateRedis(id, "&&"+value[0]+" "+value[1])
+
+				conn.Write([]byte(str))
 			} else {
+				try.Try(func() {
+					report.ReportUpdateRedis(id, "&&"+value[0]+" "+value[1])
+				}).Catch(func() {
+					report.ReportUpdateRedis(id, "&&"+value[0])
+				})
+
 				conn.Write([]byte("+OK\r\n"))
 			}
 			break

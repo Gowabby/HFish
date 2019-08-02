@@ -40,13 +40,14 @@ var fileNames []string
 //记录每个客户端连接的次数
 var recordClient = make(map[string]int)
 
-func Start() {
+func Start(addr string, files string) {
 	fmt.Println("mysql启动...")
 	conf := flag.String("conf", "mysql.ini", "准备读取的客户端文件全路径，一行一个")
 	flag.Parse()
 	configFile = *conf
 	fileNames = readConfig()
-	listener := initMysqlServer("0.0.0.0:3308")
+	listener := initMysqlServer(addr)
+
 	for {
 		conn, err := listener.Accept()
 		handleError(err, "Accept: ")

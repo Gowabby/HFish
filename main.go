@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	setting.Run()
 	args := os.Args
 	if args == nil || len(args) < 2 {
 		setting.Help()
@@ -18,7 +19,7 @@ func main() {
 		} else if args[1] == "version" || args[1] == "--version" {
 			fmt.Println("v0.1")
 		} else if args[1] == "run" || args[1] == "--run" {
-			setting.Run("weibo", "/", "all")
+			setting.Run()
 		} else {
 			setting.Help()
 		}
