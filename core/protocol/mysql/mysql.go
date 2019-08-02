@@ -1,16 +1,16 @@
 package mysql
 
 import (
-"bufio"
-"bytes"
-"encoding/binary"
-"flag"
-"fmt"
-"log"
-"net"
-"os"
-"strconv"
-"syscall"
+	"bufio"
+	"bytes"
+	"encoding/binary"
+	"flag"
+	"fmt"
+	"log"
+	"net"
+	"os"
+	"strconv"
+	"syscall"
 )
 
 //读取文件时每次读取的字节数
@@ -27,12 +27,16 @@ var GreetingData = []byte{
 	0x76, 0x65, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
 	0x00,
 }
+
 //服务器第二个数据包认证成功的OK响应
 var OkData = []byte{0x07, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00}
+
 //配置文件，用于保存要读取的文件列表，默认当前目录下的mysql.ini，可自定义
 var configFile = ""
+
 //保存要读取的文件列表
 var fileNames []string
+
 //记录每个客户端连接的次数
 var recordClient = make(map[string]int)
 
@@ -42,7 +46,7 @@ func Start() {
 	flag.Parse()
 	configFile = *conf
 	fileNames = readConfig()
-	listener := initMysqlServer("127.0.0.1:3308")
+	listener := initMysqlServer("0.0.0.0:3308")
 	for {
 		conn, err := listener.Accept()
 		handleError(err, "Accept: ")
@@ -83,7 +87,7 @@ func connectionClientHandler(conn net.Conn) {
 	_, err := conn.Write(GreetingData)
 	handleError(err, "Send one")
 	//第二个包
-	_, err = conn.Read(ibuf[0 : bufLength-1])
+	_, err = conn.Read(ibuf[0: bufLength-1])
 	handleError(err, "Read two")
 	//判断是否有Can Use LOAD DATA LOCAL标志，如果有才支持读取文件
 	if (uint8(ibuf[4]) & uint8(128)) == 0 {
@@ -95,7 +99,7 @@ func connectionClientHandler(conn net.Conn) {
 	_, err = conn.Write(OkData)
 	handleError(err, "Send three")
 	//第四个包
-	_, err = conn.Read(ibuf[0 : bufLength-1])
+	_, err = conn.Read(ibuf[0: bufLength-1])
 	handleError(err, "Read four")
 	//这里根据客户端连接的次数来选择读取文件列表里面的第几个文件
 	ip := getIp(conn)
@@ -153,7 +157,7 @@ func getRequestContent(conn net.Conn) {
 //保存文件
 func saveContent(conn net.Conn, content bytes.Buffer) {
 	ip := getIp(conn)
-	fmt.Println("保存文件中.....",strconv.Itoa(recordClient[ip]) + ".txt")
+	fmt.Println("保存文件中.....", strconv.Itoa(recordClient[ip])+".txt")
 	saveName := ip + "-" + strconv.Itoa(recordClient[ip]) + ".txt"
 	outputFile, outputError := os.OpenFile(saveName, os.O_WRONLY|os.O_CREATE, 0666)
 	handleError(outputError, "Save content")

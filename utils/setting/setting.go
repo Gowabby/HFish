@@ -81,11 +81,19 @@ func Init() {
 
 func Help() {
 	exec.Execute("clear")
-	logo := `    ______            __
-   / ____/___  ____  / /_
-  / /   / __ \/ __ \/ __/
- / /___/ /_/ / /_/ / /_
- \____/\____/\____/\__/`
+	logo := `
+o
+ \_/\o
+( Oo)                    \|/
+(_=-)  .===O- ~~~Z~A~P~~ -O-
+/   \_/U'                /|\
+||  |_/    __ _______     __
+\\  |     / // / __(_)__ / /
+{K ||    / _  / _// (_-</ _ \
+ | PP   /_//_/_/ /_/___/_//_/
+ | ||
+ (__\\
+`
 	fmt.Print(color.Yellow(logo))
 	fmt.Println(color.White("   v0.1\n"))
 	fmt.Println(color.White(" Play IFTTT, Experience Geek Life, Internet Automation."))
