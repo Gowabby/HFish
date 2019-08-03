@@ -16,7 +16,7 @@ import (
 	"HFish/core/protocol/mysql"
 )
 
-func RunWeb(template string, url string) http.Handler {
+func RunWeb(template string, static string, url string) http.Handler {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
@@ -24,7 +24,7 @@ func RunWeb(template string, url string) http.Handler {
 	r.LoadHTMLGlob("web/" + template + "/*")
 
 	// 引入静态资源
-	r.Static("/static", "./static/"+template)
+	r.Static("/static", "./web/"+static)
 
 	r.GET(url, func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
@@ -98,11 +98,12 @@ func Run() {
 	if webStatus == "1" {
 		webAddr := conf.Get("web", "addr")
 		webTemplate := conf.Get("web", "template")
+		webStatic := conf.Get("web", "static")
 		webUrl := conf.Get("web", "url")
 
 		serverWeb := &http.Server{
 			Addr:         webAddr,
-			Handler:      RunWeb(webTemplate, webUrl),
+			Handler:      RunWeb(webTemplate, webStatic, webUrl),
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 10 * time.Second,
 		}
