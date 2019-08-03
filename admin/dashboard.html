@@ -3,6 +3,7 @@
     .title {
         font-weight: bold;
         font-size: 18px;
+        margin-bottom: 30px;
     }
 
     .openx {
@@ -67,8 +68,13 @@
     <div class="col-md-2">
         <div class="card-box" style="height: 340px;">
             <p class="title">服务状态</p>
-            <hr>
             <p><span class="openx"></span>ADMIN</p>
+
+        {{if eq .apiStatus "1"}}
+            <p><span class="openx"></span>API</p>
+        {{else}}
+            <p><span class="closex"></span>API</p>
+        {{end}}
 
         {{if eq .webStatus "1"}}
             <p><span class="openx"></span>WEB</p>
@@ -257,8 +263,8 @@
                         data: ['WEB', 'SSH', 'REDIS', 'MYSQL']
                     },
                     grid: {
-                        left: '3%',
-                        right: '4%',
+                        left: '0%',
+                        right: '0%',
                         bottom: '3%',
                         containLabel: true
                     },

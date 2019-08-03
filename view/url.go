@@ -8,6 +8,7 @@ import (
 	"HFish/view/api"
 	"github.com/gin-gonic/gin"
 	"HFish/view/login"
+	"HFish/utils/conf"
 )
 
 func LoadUrl(r *gin.Engine) {
@@ -35,5 +36,11 @@ func LoadUrl(r *gin.Engine) {
 
 	// API 接口
 	// WEB 上报钓鱼信息
-	r.POST("/api/v1/post/report", api.ReportWeb)
+	apiStatus := conf.Get("api", "status")
+
+	// 判断 API 是否启用
+	if apiStatus == "1" {
+		apiUrl := conf.Get("api", "url")
+		r.POST(apiUrl, api.ReportWeb)
+	}
 }

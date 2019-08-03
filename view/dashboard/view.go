@@ -31,6 +31,7 @@ func Html(c *gin.Context) {
 	redisStatus := conf.Get("redis", "status")
 	sshStatus := conf.Get("ssh", "status")
 	webStatus := conf.Get("web", "status")
+	apiStatus := conf.Get("api", "status")
 
 	c.HTML(http.StatusOK, "dashboard.html", gin.H{
 		"webSum":      webSum,
@@ -41,6 +42,7 @@ func Html(c *gin.Context) {
 		"sshStatus":   sshStatus,
 		"redisStatus": redisStatus,
 		"mysqlStatus": mysqlStatus,
+		"apiStatus":   apiStatus,
 	})
 }
 
