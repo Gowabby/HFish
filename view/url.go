@@ -22,6 +22,9 @@ func LoadUrl(r *gin.Engine) {
 
 	// 钓鱼列表
 	r.GET("/fish", login.Jump, fish.Html)
+	r.GET("/get/fish/list", login.Jump, fish.GetFishList)
+	r.GET("/get/fish/info", login.Jump, fish.GetFishInfo)
+	r.POST("/post/fish/del", login.Jump, fish.PostFishDel)
 
 	// 邮件群发
 	r.GET("/mail", login.Jump, mail.Html)
