@@ -60,6 +60,23 @@
 - WEB 插件 需在 WEB 目录下 编写
 - WEB 插件 下面必须存在两个目录
 
+# API 接口
+
+```
+URL: http://localhost:9001/api/v1/post/report
+
+POST：
+
+    name    :   Github 钓鱼                        # 项目名
+    info    :   admin&&12345                      # 上报信息，&& 为换行符号
+    sec_key :   9cbf8a4dcb8e30682b927f352d6559a0  # API 安全密钥
+
+特殊说明：
+
+    URL api/v1/post/report 可在 config.ini 配置里修改
+    sec_key 可在 config.ini 配置里修改，修改后 WEB 模板也需要同时修改
+```
+
 # TODO
 
 - [x] 登录模块
@@ -87,4 +104,4 @@
 
 加微信拉人，请备注 **HackLC**
 
-![wechat.png](./images/wechat.png)
+![wechat.png](./images/wechat.jpg)
