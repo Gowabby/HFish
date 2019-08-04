@@ -16,7 +16,6 @@ func Html(c *gin.Context) {
 	})
 }
 
-
 /*获取配置*/
 func getSetting() []map[string]interface{} {
 	sql := "select id,type,info,setting_name,setting_dis,update_time,status from hfish_setting where setting_type!=-1"
@@ -72,66 +71,6 @@ func UpdateEmailInfo(c *gin.Context) {
 	port := c.PostForm("port")
 	//subType := c.PostForm("type")
 	info := joinInfo(host, port, email, pass)
-	sql := `
-		UPDATE  hfish_setting 
-		set	info = ?,
-			status = ?,
-			update_time = ?
-		where id = ?;`
-	dbUtil.Update(sql, info, 0, time.Now().Format("2006-01-02 15:04"), id)
-	c.JSON(http.StatusOK, error.ErrSuccessNull())
-}
-/*更新登录用户信息*/
-func UpdateLoginInfo(c *gin.Context) {
-	loginName := c.PostForm("loginName")
-	loginPwd := c.PostForm("loginPwd")
-	id := c.PostForm("id")
-	info := joinInfo(loginName, loginPwd)
-	sql := `
-		UPDATE  hfish_setting 
-		set	info = ?,
-			status = ?,
-			update_time = ?
-		where id = ?;`
-	dbUtil.Update(sql, info, 0, time.Now().Format("2006-01-02 15:04"), id)
-	c.JSON(http.StatusOK, error.ErrSuccessNull())
-}
-
-/*更新alertOver推送配置*/
-func UpdateAlertOverInfo(c *gin.Context) {
-	alertSource := c.PostForm("alertSource")
-	alertReceiver := c.PostForm("alertReceiver")
-	id := c.PostForm("id")
-	info := joinInfo(alertSource, alertReceiver)
-	sql := `
-		UPDATE  hfish_setting 
-		set	info = ?,
-			update_time = ?
-		where id = ?;`
-	dbUtil.Update(sql, info, time.Now().Format("2006-01-02 15:04"), id)
-	c.JSON(http.StatusOK, error.ErrSuccessNull())
-}
-
-/*更新pushBullet推送配置*/
-func UpdatePushBulletInfo(c *gin.Context) {
-	pushBulletToken := c.PostForm("pushBulletToken")
-	id := c.PostForm("id")
-	info := joinInfo(pushBulletToken)
-	sql := `
-		UPDATE  hfish_setting 
-		set	info = ?,
-			status = ?,
-			update_time = ?
-		where id = ?;`
-	dbUtil.Update(sql, info, 0, time.Now().Format("2006-01-02 15:04"), id)
-	c.JSON(http.StatusOK, error.ErrSuccessNull())
-}
-
-/*更新pushFangTang推送配置*/
-func UpdatePushFangTangInfo(c *gin.Context) {
-	pushBulletToken := c.PostForm("pushBulletToken")
-	id := c.PostForm("id")
-	info := joinInfo(pushBulletToken)
 	sql := `
 		UPDATE  hfish_setting 
 		set	info = ?,

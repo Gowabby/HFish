@@ -101,32 +101,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" onclick="updateEmailPost()">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Setting User Info Modal -->
-<div class="modal fade" id="settingLoginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">登录配置</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="">登录账号</label>
-                    <input type="text" class="form-control" id="loginName" name="loginName" placeholder="请填写登录账号">
-                </div>
-                <div class="form-group">
-                    <label for="">登录密码</label>
-                    <input type="password" class="form-control" id="loginPwd" name="loginPwd" placeholder="请填写登录密码">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" onclick="addLoginPost()">Save</button>
+                <button type="submit" class="btn btn-primary" onclick="updateEmailPost()">保存</button>
             </div>
         </div>
     </div>
@@ -134,8 +109,6 @@
 <input type="hidden" value="" id="settingId">
 {{template "footer" }}
 <script>
-
-
     function settingSubFunc(id, type) {
         $("#settingId").val(id)
         getSettingInfo(id, type)
@@ -154,7 +127,7 @@
     var getSettingInfo = function (id, type) {
         $.ajax({
             type: "get",
-            url: "/get/setting/info?id=" + id,
+            url: "/get/setting/info?id=" + id
         }).success(function (result) {
             if (result.code == 200) {
                 var arr = result.data[0].info.split("&&")
@@ -171,7 +144,7 @@
         }).fail(function (err) {
             console.log(err)
         })
-    }
+    };
 
     function updateEmailPost() {
         var params = {
@@ -180,17 +153,17 @@
             host: $("#host").val(),
             port: $("#port").val(),
             id: $("#settingId").val()
-        }
+        };
+
         $.ajax({
             type: "post",
             url: "/post/setting/update",
-            data: params,
+            data: params
         }).success(function (result) {
             if (result.code == 200) {
-                if(!$("#checkbox-" + params.id).prop("checked")){
+                if (!$("#checkbox-" + params.id).prop("checked")) {
                     $("#checkbox-" + params.id).click()
                 }
-
             }
             $('#myModal').modal('hide')
 
@@ -199,39 +172,18 @@
         })
     }
 
-    function addLoginPost() {
-        var params = {
-            loginName: $("#loginName").val(),
-            loginPwd: $("#loginPwd").val(),
-            id: $("#settingId").val()
-        };
-        $.ajax({
-            type: "post",
-            url: "/post/setting/login",
-            data: params,
-        }).success(function (result) {
-            if (result.code == 200) {
-                if(!$("#checkbox-" + params.id).prop("checked")){
-                    $("#checkbox-" + params.id).click()
-                }
-            }
-            $('#settingLoginModal').modal('hide')
-        }).fail(function (err) {
-            console.log(err)
-        })
-    }
-
     function updateStatusFunc(id, ele) {
         var params = {
-            id,
-            status: $(ele).is(":checked") ? 1 : 0
-        }
+            "id": id,
+            "status": $(ele).is(":checked") ? 1 : 0
+        };
+
         $.ajax({
             type: "post",
             url: "/post/setting/checkSetting",
-            data: params,
+            data: params
         }).success(function (result) {
-            if (result.code == "10003") {
+            if (result.code == 10003) {
                 swal(result.msg)
                 $(ele).click()
             }

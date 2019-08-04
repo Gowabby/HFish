@@ -106,6 +106,7 @@ func Query(sql string, args ...interface{}) []map[string]interface{} {
 		sql := `select * from coot_tasks where id=?;`
 		result := dbUtil.Query(sql, 1)
 	*/
+
 	db := conn()
 
 	rows, err := db.Query(sql, args ...)

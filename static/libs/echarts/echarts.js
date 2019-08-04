@@ -49246,7 +49246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function createPath(symbolMeta) {
 	        var symbolPatternSize = symbolMeta.symbolPatternSize;
 	        var path = symbolUtil.createSymbol(
-	            // Consider texture img, make a big size.
+	            // Consider texture images, make a big size.
 	            symbolMeta.symbolType,
 	            -symbolPatternSize / 2,
 	            -symbolPatternSize / 2,
@@ -65611,7 +65611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var lang = model.get('lang');
 	            var html = ''
 	                + '<body style="margin:0;">'
-	                + '<img src="' + url + '" style="max-width:100%;" title="' + ((lang && lang[0]) || '') + '" />'
+	                + '<images src="' + url + '" style="max-width:100%;" title="' + ((lang && lang[0]) || '') + '" />'
 	                + '</body>';
 	            var tab = window.open();
 	            tab.document.write(html);
@@ -67344,9 +67344,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * IMAGE
 	     **************************************************/
 	    var isImage = function (img) {
-	        // FIXME img instanceof Image 如果 img 是一个字符串的时候，IE8 下会报错
+	        // FIXME images instanceof Image 如果 images 是一个字符串的时候，IE8 下会报错
 	        return (typeof img === 'object') && img.tagName && img.tagName.toUpperCase() === 'IMG';
-	        // return img instanceof Image;
+	        // return images instanceof Image;
 	    };
 
 	    // Rewrite the original path method

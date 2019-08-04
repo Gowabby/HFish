@@ -8,14 +8,14 @@ import (
 	"time"
 )
 
-func SendMail(mailTo []string, subject string, body string,config []string) error {
+func SendMail(mailTo []string, subject string, body string, config []string) error {
 	port, _ := strconv.Atoi(config[1])
 	m := gomail.NewMessage()
 
 	m.SetHeader("From", "<"+config[2]+">")
 	m.SetHeader("To", mailTo...)    //发送给多个用户
 	m.SetHeader("Subject", subject) //设置邮件主题
-	m.SetBody("text/web", body)    //设置邮件正文
+	m.SetBody("text/html", body)    //设置邮件正文
 
 	d := gomail.NewDialer(config[0], port, config[2], config[3])
 
