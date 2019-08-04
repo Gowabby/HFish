@@ -2,13 +2,18 @@ package ssh
 
 import (
 	"github.com/gliderlabs/ssh"
-	"fmt"
+	"HFish/core/report"
+	"strings"
 )
 
-func Start() {
-	ssh.ListenAndServe(":2222", nil,
+func Start(addr string) {
+	ssh.ListenAndServe(addr, nil,
 		ssh.PasswordAuth(func(s ssh.Context, password string) bool {
-			fmt.Println("SSH Ip:" + s.RemoteAddr().String() + " User:" + s.User() + " Password:" + password)
+			info := s.User() + "&&" + password
+
+			arr := strings.Split(s.RemoteAddr().String(), ":")
+			report.ReportSSH(arr[0], info)
+
 			return false // false 代表 账号密码 不正确
 		}),
 	)

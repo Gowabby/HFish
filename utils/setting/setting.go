@@ -10,17 +10,21 @@ import (
 	"os"
 	"net/http"
 	"time"
+	"HFish/utils/conf"
+	"HFish/core/protocol/ssh"
+	"HFish/core/protocol/redis"
+	"HFish/core/protocol/mysql"
 )
 
-func RunHtml(project string, url string) http.Handler {
+func RunWeb(template string, static string, url string) http.Handler {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
 	// 引入html资源
-	r.LoadHTMLGlob("web/" + project + "/*")
+	r.LoadHTMLGlob("web/" + template + "/*")
 
 	// 引入静态资源
-	r.Static("/static", "./static/"+project)
+	r.Static("/static", "./web/"+static)
 
 	r.GET(url, func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
@@ -29,7 +33,7 @@ func RunHtml(project string, url string) http.Handler {
 	return r
 }
 
-func RunWeb() http.Handler {
+func RunAdmin() http.Handler {
 	gin.DisableConsoleColor()
 	f, _ := os.Create("./logs/hfish.log")
 	gin.DefaultWriter = io.MultiWriter(f)
@@ -49,30 +53,77 @@ func RunWeb() http.Handler {
 	return r
 }
 
-func Run(project string, url string, types string) {
-	server01 := &http.Server{
-		Addr:         ":9001",
-		Handler:      RunWeb(),
+func Run() {
+	// 启动 Mysql 钓鱼
+	mysqlStatus := conf.Get("mysql", "status")
+
+	// 判断 Mysql 钓鱼 是否开启
+	if mysqlStatus == "1" {
+		mysqlAddr := conf.Get("mysql", "addr")
+
+		// 利用 Mysql 服务端 任意文件读取漏洞
+		mysqlFiles := conf.Get("mysql", "files")
+
+		go mysql.Start(mysqlAddr, mysqlFiles)
+	}
+
+	//=========================//
+
+	// 启动 Redis 钓鱼
+	redisStatus := conf.Get("redis", "status")
+
+	// 判断 Redis 钓鱼 是否开启
+	if redisStatus == "1" {
+		redisAddr := conf.Get("redis", "addr")
+		go redis.Start(redisAddr)
+	}
+
+	//=========================//
+
+	// 启动 SSH 钓鱼
+	sshStatus := conf.Get("ssh", "status")
+
+	// 判断 SSG 钓鱼 是否开启
+	if sshStatus == "1" {
+		sshAddr := conf.Get("ssh", "addr")
+		go ssh.Start(sshAddr)
+	}
+
+	//=========================//
+
+	// 启动 Web 钓鱼
+	webStatus := conf.Get("web", "status")
+
+	// 判断 Web 钓鱼 是否开启
+	if webStatus == "1" {
+		webAddr := conf.Get("web", "addr")
+		webTemplate := conf.Get("web", "template")
+		webStatic := conf.Get("web", "static")
+		webUrl := conf.Get("web", "url")
+
+		serverWeb := &http.Server{
+			Addr:         webAddr,
+			Handler:      RunWeb(webTemplate, webStatic, webUrl),
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 10 * time.Second,
+		}
+
+		go serverWeb.ListenAndServe()
+	}
+
+	//=========================//
+
+	// 启动 admin 管理后台
+	adminbAddr := conf.Get("admin", "addr")
+
+	serverAdmin := &http.Server{
+		Addr:         adminbAddr,
+		Handler:      RunAdmin(),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
-	server02 := &http.Server{
-		Addr:         ":9000",
-		Handler:      RunHtml(project, url),
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-
-	switch types {
-	case "all":
-		// 前后端全部启动
-		go server01.ListenAndServe()
-		server02.ListenAndServe()
-	case "d":
-		// 启动后端
-		server02.ListenAndServe()
-	}
+	serverAdmin.ListenAndServe()
 }
 
 func Init() {
@@ -84,7 +135,7 @@ func Help() {
 	logo := ` o
   \_/\o
  ( Oo)                    \|/
- (_=-)  .===O- ~~~Z~A~P~~ -O-
+ (_=-)  .===O- ~~~b~i~u~~ -O-
  /   \_/U'                /|\
  ||  |_/
  \\  |	     ~ By: HackLC Team
@@ -94,7 +145,7 @@ func Help() {
   (__\\   /_//_/_/ /_/___/_//_/ v0.1
 `
 	fmt.Println(color.Yellow(logo))
-	fmt.Println(color.White(" An Active Attack Honeypot System for Fishing."))
+	fmt.Println(color.White(" A Safe and Active Attack Honeypot Fishing Framework System for Enterprises."))
 	fmt.Println("")
 	fmt.Println(color.Yellow(" + [ ABOUT ]----------------------------------------------------------- +"))
 	fmt.Println("")
@@ -110,16 +161,3 @@ func Help() {
 	fmt.Println(color.Yellow(" + -------------------------------------------------------------------- +"))
 	fmt.Println("")
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

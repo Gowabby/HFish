@@ -1,21 +1,14 @@
 package send
 
 import (
-	"strconv"
-	"gopkg.in/gomail.v2"
-	"strings"
-	"github.com/gin-gonic/gin"
-	"time"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"gopkg.in/gomail.v2"
+	"strconv"
+	"time"
 )
 
-func SendMail(mailTo []string, subject string, body string, findMailConfig []map[string]interface{}) error {
-
-	// smtp&&post&&user&&password
-	info := findMailConfig[0]["info"]
-
-	config := strings.Split(info.(string), "&&")
-
+func SendMail(mailTo []string, subject string, body string,config []string) error {
 	port, _ := strconv.Atoi(config[1])
 	m := gomail.NewMessage()
 

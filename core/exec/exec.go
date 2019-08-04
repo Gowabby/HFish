@@ -1,8 +1,8 @@
 package exec
 
 import (
-	"bytes"
 	"os/exec"
+	"bytes"
 )
 
 func Execute(shell string) (string, error) {

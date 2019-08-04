@@ -81,7 +81,6 @@ func UpdateEmailInfo(c *gin.Context) {
 	dbUtil.Update(sql, info, 0, time.Now().Format("2006-01-02 15:04"), id)
 	c.JSON(http.StatusOK, error.ErrSuccessNull())
 }
-
 /*更新登录用户信息*/
 func UpdateLoginInfo(c *gin.Context) {
 	loginName := c.PostForm("loginName")

@@ -20,6 +20,14 @@ func ErrSuccess(data []map[string]interface{}) map[string]interface{} {
 	}
 }
 
+func ErrSuccessEdit(data map[string]map[string]int64) map[string]interface{} {
+	return gin.H{
+		"code": 200,
+		"msg":  "success",
+		"data": data,
+	}
+}
+
 func ErrSuccessNull() map[string]interface{} {
 	return gin.H{
 		"code": 200,
@@ -27,10 +35,10 @@ func ErrSuccessNull() map[string]interface{} {
 	}
 }
 
-func ErrFailFileType() map[string]interface{} {
+func ErrFailApiKey() map[string]interface{} {
 	return gin.H{
 		"code": 1001,
-		"msg":  "异常文件格式",
+		"msg":  "秘钥不正确",
 	}
 }
 

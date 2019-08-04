@@ -1,6 +1,7 @@
 package mail
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -16,11 +17,18 @@ func Html(c *gin.Context) {
 func SendEmailToUsers(c *gin.Context){
 	emails:=c.PostForm("emails")
 	title:=c.PostForm("title")
+	from:=c.PostForm("from")
 	content:=c.PostForm("content")
 	eArr :=strings.Split(emails,",")
-	sql := `select status,info from coot_setting where type=email;`
+	fmt.Println(eArr,title,from,content)
+	sql := `select status,info from hfish_setting where id = 1`
 	isAlertStatus := dbUtil.Query(sql)
-	send.SendMail(eArr,title,content,isAlertStatus)
+	info := isAlertStatus[0]["info"]
+	config := strings.Split(info.(string), "&&")
+	if from!=""{
+		config[2]=from
+	}
+	send.SendMail(eArr,title,content,config)
 	c.JSON(http.StatusOK,gin.H{
 		"code":200,
 		"msg":"success",
